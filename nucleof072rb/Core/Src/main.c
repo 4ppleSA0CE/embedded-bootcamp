@@ -96,6 +96,12 @@ int main(void)
 
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
 
+  uint8_t tx_packet[3] = {0x01, 0x80, 0x00};
+   uint8_t rx_packet[3];
+
+   uint16_t pot_val = (rx_packet[1] << 8) + rx_packet[2];
+   uint16_t pwm_min = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.05, pwm_max = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.1;
+   uint16_t pwm_val = pwm_min + (pwm_max - pwm_min) * pot_val / ((1 << 10) - 1);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -106,16 +112,9 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  uint8_t tx_packet[3] = {0x01, 0x80, 0x00};
-	  uint8_t rx_packet[3];
-
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-	  HAL_SPI_TransmitReceive(&hspi1, tx_packet, rx_packet, 3 * sizeof(uint8_t), 2);
+	  HAL_SPI_TransmitReceive(&hspi1, tx_packet, rx_packet, 3, 2);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
-
-	  uint16_t pot_val = (rx_packet[1] << 8) + rx_packet[2];
-	  uint16_t pwm_min = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.05, pwm_max = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.1;
-	  uint16_t pwm_val = pwm_min + (pwm_max - pwm_min) * pot_val / ((1 << 10) - 1);
 
 	  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, pwm_val);
 

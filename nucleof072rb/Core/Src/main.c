@@ -99,9 +99,9 @@ int main(void)
   uint8_t tx_packet[3] = {0x01, 0x80, 0x00};
   uint8_t rx_packet[3];
 
-  uint16_t pot_val; = (rx_packet[1] << 8) + rx_packet[2];
-  uint16_t pwm_min; = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.05, pwm_max = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.1;
-  uint16_t pwm_val; = pwm_min + (pwm_max - pwm_min) * pot_val / ((1 << 10) - 1);
+  uint16_t pot_val;
+  uint16_t pwm_min;
+  uint16_t pwm_val;
   /* USER CODE END 2 */
 
   /* Infinite loop */

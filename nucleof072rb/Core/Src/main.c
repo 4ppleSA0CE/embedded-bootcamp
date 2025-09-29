@@ -112,12 +112,12 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 
-	  pot_val = (rx_packet[1] << 8) + rx_packet[2];
-	  pwm_min = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.05, pwm_max = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.1;
-	  pwm_val = pwm_min + (pwm_max - pwm_min) * pot_val / ((1 << 10) - 1);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
 	  HAL_SPI_TransmitReceive(&hspi1, tx_packet, rx_packet, 3, 2);
 	  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_SET);
+	  pot_val = (rx_packet[1] << 8) + rx_packet[2];
+	  pwm_min = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.05, pwm_max = __HAL_TIM_GET_AUTORELOAD(&htim1) * 0.1;
+	  pwm_val = pwm_min + (pwm_max - pwm_min) * pot_val / ((1 << 10) - 1);
 
 	  __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, pwm_val);
 
